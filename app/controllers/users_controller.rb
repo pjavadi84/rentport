@@ -1,37 +1,59 @@
 class UsersController < ApplicationController
+  get '/users/:slug' do
+    @user = User.find_by_slug(params[:slug])
+    erb :'users/show'
+  end
 
   # GET: /users
-  get "/users" do
-    erb :"/users/index.html"
+  get "/signup" do
+    if !logged_in?
+      erb :'users/new.html', locals: {message: "Please sign up before you sign in"}
+    else
+      redirect to '/properties.html'
+    end
   end
 
-  # GET: /users/new
-  get "/users/new" do
-    erb :"/users/new.html"
-  end
 
   # POST: /users
-  post "/users" do
-    redirect "/users"
+  post "/signup" do
+    if params[:company_name].empty? || params[:email].empty? || params[:username].empty? || params[:password].empty?
+      redirect to '/signup'
+    else
+      @user = User.new(:company_name => params[:company_name], :email => params[:email], :username => params[:username], :password => params[:password])
+      @user.save
+      session[:user_id] = @user.id
+      redirect to '/properties'
+    end
   end
 
-  # GET: /users/5
-  get "/users/:id" do
-    erb :"/users/show.html"
+  #GET: /login
+  get '/login' do
+    if !logged_in?
+      erb :'users/login.html'
+    else
+      redirect to '/properties'
+    end
   end
 
-  # GET: /users/5/edit
-  get "/users/:id/edit" do
-    erb :"/users/edit.html"
-  end
+  #PST: /login
+  post '/login' do
+    user = User.find_by(:username => params[:username])
 
-  # PATCH: /users/5
-  patch "/users/:id" do
-    redirect "/users/:id"
+    if user && user.authenticate(params[:password])
+      session[:user_id] = user.id
+      redirect to '/properties'
+    else
+      redirect to '/signup'
+    end
   end
+  
 
-  # DELETE: /users/5/delete
-  delete "/users/:id/delete" do
-    redirect "/users"
+  get "/logout" do
+    if logged_in?
+      session.destroy
+      redirect to '/login'
+    else
+      redirect to '/welcome'
+    end
   end
 end

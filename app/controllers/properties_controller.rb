@@ -2,7 +2,7 @@ class PropertiesController < ApplicationController
 
   # GET: /properties
   get "/properties" do
-    erb :"/properties/index.html"
+    erb :"/properties/properties.html"
   end
 
   # GET: /properties/new

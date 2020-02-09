@@ -1,1 +1,15 @@
-<h1>Insert the form to create a new instance of your model.</h1>
+<h2>User Profile: </h2>
+
+<% unless locals.empty? %>
+  <%= message %>
+<% end %>
+
+
+<h3>Sign Up</h3>
+<form action="/signup" method="POST">
+  <p>Enter your company name: <input type="text" name="company_name"></p>
+  <p>Enter your Email address: <input type="text" name="email"></p>
+  <p>Enter your Username: <input type="text" name = "username"></p>
+  <p>Enter your Password: <input type="password" name="password"></p>
+  <input class="btn btn-primary" type="submit" value="Sign Up!">
+</form>
